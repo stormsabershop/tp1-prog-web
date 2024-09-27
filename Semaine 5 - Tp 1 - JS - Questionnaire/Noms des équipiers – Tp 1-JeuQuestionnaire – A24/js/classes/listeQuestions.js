@@ -1,9 +1,10 @@
-class Question {
+class ListeQuestions {
 
-    constructor(tabAssQuestion) {
+
+
+    constructor() {
         this._contenu = "";
         this._reponses = [];
-        this._tabAssQuestion = tabAssQuestion;
     }
     get contenu() {
         return this._contenu;
@@ -17,13 +18,17 @@ class Question {
         return this._reponses;
     }
 
+    premiereQuestion() {
+        return _tabAssQuestions[0].question;
+    }
+
     set reponses(value) {
         this._reponses = value;
     }
     
 
     parcourirTab(){
-        for (let i = 0; i < tabAssQuestions; i++) {
+        for (let i = 0; i < tabAssQuestions.length; i++) {
             
         }
     }

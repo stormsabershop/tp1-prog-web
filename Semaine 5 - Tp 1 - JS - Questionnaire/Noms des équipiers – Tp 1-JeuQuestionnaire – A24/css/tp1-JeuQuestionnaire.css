@@ -1,2 +1,21 @@
+body {
+    background-color: blanchedalmond;
+}
 
-/* Mettre tous vos styles ici */
+p {
+    text-align: center;
+}
+
+#departButton {
+    padding-left: 50px;
+}
+
+#zoneDeDonnees {
+    margin: 20px 20px 20px 20px;
+    padding: 20px 20px 20px 20px;
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: white;
+
+    font-family: "Comic Sans MS";
+}

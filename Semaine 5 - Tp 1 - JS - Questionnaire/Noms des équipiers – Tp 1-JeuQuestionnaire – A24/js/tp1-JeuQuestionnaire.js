@@ -1,6 +1,7 @@
 "use strict"
 
 const sectionQuiz = document.getElementById("zoneDeDonnees");
+const tabQuestions = remplirTableauQuestions();
 
 
 /**
@@ -22,15 +23,15 @@ function messageDepart() {
     return "Bonjour! Bienvenu au quiz!!!! Cliquez sur le bouton de départ pour commencer 🙂🙂🙂🙂<br><br>";
 }
 
-function demarrer(tabQuestion) {
-
-    afficherQuiz(creerQuizAleatoire(tabQuestion))
+function demarrer() {
+    let cool = new Quiz(tabQuestions);
+    sectionQuiz.innerHTML += quiz.questionParIndex(0);
 }
 
 function creerQuizAleatoire(tabQuestions) {
-    let quiz = [Question];
+    let quiz = new Quiz();
     for (let i = 0; i < tabQuestions; i++) {
-        quiz.push(tabQuestions[i]);
+
     }
     return quiz;
 }
@@ -57,11 +58,10 @@ function remplirTableauQuestions() {
 
 
 function main() {
-    let tabQuestion = remplirTableauQuestions();
 
 
     sectionQuiz.innerHTML += messageDepart();
-    sectionQuiz.append(creerButton("Commencer", demarrer(tabQuestion), "departButton"));
+    sectionQuiz.append(creerButton("Commencer", demarrer, "departButton"));
 
 }
 

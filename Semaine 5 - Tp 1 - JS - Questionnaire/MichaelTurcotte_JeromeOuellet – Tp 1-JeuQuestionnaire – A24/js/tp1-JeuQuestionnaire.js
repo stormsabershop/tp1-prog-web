@@ -2,6 +2,7 @@
 
 const sectionQuiz = document.getElementById("zoneDeDonnees");
 const tabQuestions = remplirTableauQuestions();
+const NBMAXQUESTIONSTAB = 15;
 
 
 /**
@@ -24,30 +25,21 @@ function messageDepart() {
 }
 
 function demarrer() {
-    let cool = new Quiz(tabQuestions);
-    sectionQuiz.innerHTML += quiz.questionParIndex(0);
+    let quiz = new Quiz(tabQuestions);
+
+    for (let i = 0; i < quiz.listeQuestions.length; i++) {
+        let listeRadio = quiz.creerListeQuestionRadio(quiz.listeQuestions[i]);
+        for (let j = 0; j < listeRadio.length; j++) {
+            sectionQuiz.append(listeRadio[i]);
+        }
+    }
 }
 
-function creerQuizAleatoire(tabQuestions) {
-    let quiz = new Quiz();
-    for (let i = 0; i < tabQuestions; i++) {
-
-    }
-    return quiz;
-}
-function afficherQuiz(quiz) {
-    let stringConstructeur = "";
-    for (let i = 0; i < quiz.length; i++) {
-        stringConstructeur += quiz[i].enonce;
-        stringConstructeur += quiz[i].listeReponses;
-    }
-    sectionQuiz.innerHTML = stringConstructeur;
-}
 
 function remplirTableauQuestions() {
     let tableauQuestions = [];
 
-    for (let i = 0; i < tabAssQuestions.length; i++) {
+    for (let i = 1; i < tabAssQuestions.length; i++) {
         let j = tabAssQuestions[i];
         let question = new Question(j.enonce, j.listeReponses, j.indexBonneReponse);
 
@@ -56,9 +48,7 @@ function remplirTableauQuestions() {
     return tableauQuestions;
 }
 
-
 function main() {
-
 
     sectionQuiz.innerHTML += messageDepart();
     sectionQuiz.append(creerButton("Commencer", demarrer, "departButton"));

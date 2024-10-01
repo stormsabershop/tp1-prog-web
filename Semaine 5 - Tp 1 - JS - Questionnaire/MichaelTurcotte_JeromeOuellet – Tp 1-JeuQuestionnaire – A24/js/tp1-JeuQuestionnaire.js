@@ -25,14 +25,12 @@ function messageDepart() {
 }
 
 function demarrer() {
-    let quiz = new Quiz(tabQuestions);
+    departButton.removeEventListener('click', demarrer);
 
-    for (let i = 0; i < quiz.listeQuestions.length; i++) {
-        let listeRadio = quiz.creerListeQuestionRadio(quiz.listeQuestions[i]);
-        for (let j = 0; j < listeRadio.length; j++) {
-            sectionQuiz.append(listeRadio[i]);
-        }
-    }
+    let quiz = new Quiz(tabQuestions);
+    sectionQuiz.innerText += quiz.listeQuestions[0].enonce;
+    sectionQuiz.append(quiz.creerListeQuestion(quiz.listeQuestions[0]));
+    //TODO rajouter les boutons continuer / abandonner / vérifier notre reponse
 }
 
 

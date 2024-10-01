@@ -1,4 +1,5 @@
 class Question {
+    listeReponses = [];
 
     constructor(_enonce, _listeReponses, _indexBonneReponse) {
         this.enonce = _enonce;
@@ -7,7 +8,13 @@ class Question {
         this.bonneReponse = this.trouverBonneReponse();
     }
 
-    getRepPossible(index) {
+    /**
+     * Retourne une réponse dans la liste de reponses possible
+     * de la question selon l'index decu en parametre
+     * @param index
+     * @returns {*}
+     */
+    getReponse(index) {
         return this.listeReponses[index];
     }
 

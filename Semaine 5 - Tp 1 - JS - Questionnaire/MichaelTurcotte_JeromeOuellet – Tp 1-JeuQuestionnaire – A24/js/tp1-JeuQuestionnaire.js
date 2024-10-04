@@ -24,13 +24,18 @@ function messageDepart() {
     return "Bonjour! Bienvenu au quiz!!!! Cliquez sur le bouton de départ pour commencer 🙂🙂🙂🙂<br><br>";
 }
 
-function demarrer() {
-    departButton.removeEventListener('click', demarrer);
+function boutonDemarrer() {
+    departButton.removeEventListener('click', boutonDemarrer);
 
     let quiz = new Quiz(tabQuestions);
     sectionQuiz.innerText += quiz.listeQuestions[0].enonce;
     sectionQuiz.append(quiz.creerListeQuestion(quiz.listeQuestions[0]));
+    sectionQuiz.append(creerButton("Vérifier", boutonVerification, "verifierBouton"));
     //TODO rajouter les boutons continuer / abandonner / vérifier notre reponse
+
+}
+function boutonVerification() {
+
 }
 
 
@@ -49,8 +54,7 @@ function remplirTableauQuestions() {
 function main() {
 
     sectionQuiz.innerHTML += messageDepart();
-    sectionQuiz.append(creerButton("Commencer", demarrer, "departButton"));
-
+    sectionQuiz.append(creerButton("Commencer", boutonDemarrer, "departButton"));
 }
 
 main();

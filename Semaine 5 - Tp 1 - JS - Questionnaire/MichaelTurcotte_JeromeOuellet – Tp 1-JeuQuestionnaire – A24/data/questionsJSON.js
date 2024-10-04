@@ -23,17 +23,17 @@ let tabAssQuestions = [
         "indexBonneReponse" : 2
     },
     {
-        "enonce" : "Quel est le pays d'origine du chocolat",
+        "enonce" : "Quel est le pays où est-ce que le chocolat a été inventé",
         "listeReponses" :["Suisse", "Mexique", "Belgique", "France"],
         "indexBonneReponse" : 2
     },
     {
-        "enonce" : "Qui a peint la \"Mona Lisa\" ?",
+        "enonce" : "Qui a peinturé la \"Mona Lisa\" ?",
         "listeReponses" :["Pablo Picasso", "Claude Monet", "Léonard de Vinci", "Vincent van Gogh"],
         "indexBonneReponse" : 3
     },
     {
-        "enonce" : "Quelle est la langue la plus parlée au monde ?",
+        "enonce" : "Quelle est la langue que  y'a le plus de monde qui l'utilisent ?",
         "listeReponses" :["Espagnol", "Anglais", "Chinois mandarin", "Arabe"],
         "indexBonneReponse" : 3
     },
@@ -48,12 +48,12 @@ let tabAssQuestions = [
         "indexBonneReponse" : 2
     },
     {
-        "enonce" : "Quel est le capital de l'Italie ?",
+        "enonce" : "Quel est la capitale de l'Italie ?",
         "listeReponses" :["Rome", "Milan", "Naples", "Florence"],
         "indexBonneReponse" : 1
     },
     {
-        "enonce" : "Quel est le continent le plus peuplé ?",
+        "enonce" : "Quel est le continent avec le plus de personnes dessus ?",
         "listeReponses" :["Afrique", "Europe", "Asie", "Amérique du Sud"],
         "indexBonneReponse" : 1
     },
@@ -63,17 +63,17 @@ let tabAssQuestions = [
         "indexBonneReponse" : 3
     },
     {
-        "enonce" : "Quel gaz constitue la majorité de l'atmosphère terrestre ?",
+        "enonce" : "Quel gaz constitue la majorité de l'atmosphère de notre planète, la terre ?",
         "listeReponses" :["Oxygène", "Azote", "Dioxyde de carbone", "Hélium"],
         "indexBonneReponse" : 2
     },
     {
-        "enonce" : "Quel est le plus grand animal terrestre ?",
+        "enonce" : "Quel est le plus grand animal qui vie dessus la terre ?",
         "listeReponses" :["Éléphant", "Girafe", "Hippopotame", "Rhinocéros"],
         "indexBonneReponse" : 1
     },
     {
-        "enonce" : "Qui a écrit \"Roméo et Juliette\" ?",
+        "enonce" : "Qui a écrit le fameux livre \"Roméo et Juliette\" ?",
         "listeReponses" :["Molière", "Victor Hugo", "Shakespeare", "Jean-Paul Sartre"],
         "indexBonneReponse" : 3
     },
@@ -83,7 +83,7 @@ let tabAssQuestions = [
         "indexBonneReponse" : 4
     },
     {
-        "enonce" : "Quel est le pays le plus grand au monde ?",
+        "enonce" : "Quel est le pays le plus gros au monde ?",
         "listeReponses" :["Canada", "Chine", "États-Unis", "Russie"],
         "indexBonneReponse" : 4
     }

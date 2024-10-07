@@ -12,7 +12,7 @@ let tabAssQuestions = [
         "listeReponses" :["Océan Atlantique", "Océan Indien", "Océan Arctique", "Océan Pacifique"],
         "indexBonneReponse" : 4
     },
-        {
+    {
         "enonce" : "Quelle est la capitale de l'Espagne ?",
         "listeReponses" :["Barcelone", "Madrid", "Séville", "Valence"],
         "indexBonneReponse" : 2

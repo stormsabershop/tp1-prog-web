@@ -1,41 +1,100 @@
-"use strict"
+"use strict";
 
-const sectionQuiz = document.getElementById("zoneDeDonnees");
+const utility = new Utility(20);
 const tabQuestions = remplirTableauQuestions();
-const NBMAXQUESTIONSTAB = 15;
+let sectionQuiz = document;
+let quizCourant;
+const continuerBouton = utility.creerButton("Continuer", nouvelleQuestion);
+const verifierBouton = utility.creerButton("Vérifier", boutonVerification);
+const departBouton = utility.creerButton("Commencer", boutonDemarrer);
+const abandonnerBouton = utility.creerButton("Abandonner", boutonAbandonner);
+const recommencerBouton = utility.creerButton("Recommencer", boutonRecommencer);
+let affPosQuestion = document.createElement("p");
+let msgDepart = document.createElement("p");
+let nbBonnesReponses = 0;
 
 
-/**
- *
- * @param texte qui va etre dans le bouton
- * @param functionAExec function qui va etre executé lorsqu'on clique sur le bouton
- * @param id du bouton
- * @returns {HTMLButtonElement} le bouton créé
- */
-function creerButton(texte, functionAExec, id) {
-    let button = document.createElement("button");
-    button.innerHTML = texte;
-    button.addEventListener('click', functionAExec);
-    button.id = id;
-    return button;
-}
+//TODO probleme de label qui a pas de "for"
 
-function messageDepart() {
-    return "Bonjour! Bienvenu au quiz!!!! Cliquez sur le bouton de départ pour commencer 🙂🙂🙂🙂<br><br>";
+function getNbBonnesReponses() {
+    return document.createElement("span").innerText = "Bonnes Réponses : " + nbBonnesReponses + "/" + quizCourant.getNBMAXQUESTIONS();
 }
 
 function boutonDemarrer() {
-    departButton.removeEventListener('click', boutonDemarrer);
+   quizCourant = new Quiz(tabQuestions);
 
-    let quiz = new Quiz(tabQuestions);
-    sectionQuiz.innerText += quiz.listeQuestions[0].enonce;
-    sectionQuiz.append(quiz.creerListeQuestion(quiz.listeQuestions[0]));
-    sectionQuiz.append(creerButton("Vérifier", boutonVerification, "verifierBouton"));
+    msgDepart.innerHTML = "";
+
+
+    departBouton.removeEventListener('click', boutonDemarrer);
+    departBouton.remove();
+
+    nouvelleQuestion();
+
+    zoneDeDonnees.append(continuerBouton);
     //TODO rajouter les boutons continuer / abandonner / vérifier notre reponse
 
 }
-function boutonVerification() {
 
+//TODO faire la verification des reponses
+function boutonVerification() {
+    verifierBouton.removeEventListener('click', boutonDemarrer);
+    verifierBouton.remove();
+    sectionQuiz.append(continuerBouton);
+
+}
+
+function nouvelleQuestion() {
+    affPosQuestion.innerHTML = "Question " + (quizCourant.getIndexQuestionCourrante() + 1) + "/" + quizCourant.getNBMAXQUESTIONS();
+
+    if (quizCourant.getNBMAXQUESTIONS() == quizCourant.getIndexQuestionCourrante()) {
+        sectionQuiz = finDeQuiz();
+    } else {
+
+        let listeQuestions = document.createElement("div");
+        listeQuestions.id = "questionCourante";
+        let questionCourante = quizCourant.getQuestionsCourante();
+
+        listeQuestions.innerText = questionCourante.enonce;
+
+        for (let i = 0; i < questionCourante.listeReponses.length; i++) {
+            let paragraphe = document.createElement('p');
+            let label = document.createElement('label');
+
+            let radio = document.createElement("input");
+            radio.type = "radio";
+            label.innerText = questionCourante.getReponse(i)
+            radio.id = label.innerText;
+            radio.name = "quiz";
+            paragraphe.append(radio);
+            paragraphe.append(label);
+            listeQuestions.append(paragraphe);
+        }
+        quizCourant.incrementPosQuestion();
+        sectionQuiz.innerHTML = "";
+        sectionQuiz.append(affPosQuestion);
+        sectionQuiz.append(listeQuestions);
+        sectionQuiz.append(getNbBonnesReponses());
+
+    }
+}
+
+function boutonAbandonner() {
+
+}
+
+function boutonRecommencer() {
+    boutonDemarrer();
+}
+
+function finDeQuiz() {
+    let contenant = document.createElement("div");
+    continuerBouton.remove();
+    continuerBouton.removeEventListener('click', nouvelleQuestion);
+    contenant.innerText = "Fin du quiz!!!";
+    contenant.append(recommencerBouton);
+
+    return contenant;
 }
 
 
@@ -51,10 +110,17 @@ function remplirTableauQuestions() {
     return tableauQuestions;
 }
 
+//TODO toute mettre dans le fieldset
 function main() {
+    zoneDeDonnees.append(document.createElement("fieldset"));
+    sectionQuiz = document.querySelector("#zoneDeDonnees > fieldset");
 
-    sectionQuiz.innerHTML += messageDepart();
-    sectionQuiz.append(creerButton("Commencer", boutonDemarrer, "departButton"));
+    msgDepart.innerText = "Bonjour et bienvenue au quiz!!! veuillez cliquer sur Commencer pour commencer le quiz🙂🙂🙂";
+    affPosQuestion.id = "positionQuestion";
+
+    sectionQuiz.append(msgDepart);
+    sectionQuiz.append(departBouton);
+
 }
 
 main();

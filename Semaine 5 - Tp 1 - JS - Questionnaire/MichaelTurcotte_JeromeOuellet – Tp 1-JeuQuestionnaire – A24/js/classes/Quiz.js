@@ -4,44 +4,50 @@ const NBMAXQUESTIONQUIZ = 5;
 
 class Quiz {
     listeQuestions = [];
+    posListeQuestion = 0;
 
 
     constructor(tabAllQuestions) {
-       this.remplirQuiz(tabAllQuestions);
+        this.remplirQuiz(tabAllQuestions);
     }
+
     remplirQuiz(tabAllQuestion) {
+        let tabIdQuestions = [];
+        let id = 0;
         for (let i = 0; i < NBMAXQUESTIONQUIZ; i++) {
-            this.listeQuestions.push(tabAllQuestion[parseInt(Math.random() * 15)]);
-        }
-    }
+            let estValide = false;
 
-    creerListeQuestion(question) {
-        let listeQuestions = document.createElement("div");
+            while(!estValide) {
+                id = parseInt(Math.random() * 15);
 
-        for (let i = 0; i < question.listeReponses.length; i++) {
-            let paragraphe = document.createElement('p');
-            let label = document.createElement('label');
+                if (!tabIdQuestions.includes(id)) {
+                    tabIdQuestions.push(id);
 
-            let radio = document.createElement("input");
-            radio.type = "radio";
-            label.innerText = question.getReponse(i)
-            radio.id = label.innerText;
-            radio.name = "quiz";
-            paragraphe.append(radio);
-            paragraphe.append(label);
-            listeQuestions.append(paragraphe);
+                    estValide = true;
+                    this.listeQuestions.push(tabAllQuestion[id]);
+
+                }
+            }
+
         }
 
-        return listeQuestions;
     }
 
 
-    /**
-     * Retourne la question selon l'index recu en parametre
-     * @param index
-     * @returns {*}
-     */
-    getQuestion(index) {
-        return this.listeQuestions[index];
+    getIndexQuestionCourrante() {
+        return this.posListeQuestion;
     }
+
+    getNBMAXQUESTIONS() {
+        return NBMAXQUESTIONQUIZ;
+    }
+
+    getQuestionsCourante() {
+        return this.listeQuestions[this.posListeQuestion];
+    }
+
+    incrementPosQuestion() {
+        this.posListeQuestion++;
+    }
+
 }

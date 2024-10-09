@@ -13,6 +13,9 @@ let affPosQuestion = document.createElement("p");
 let msgDepart = document.createElement("p");
 let nbBonnesReponses = 0;
 
+let questionCourante;
+
+
 
 //TODO probleme de label qui a pas de "for"
 
@@ -40,7 +43,32 @@ function boutonDemarrer() {
 function boutonVerification() {
     verifierBouton.removeEventListener('click', boutonDemarrer);
     verifierBouton.remove();
-    sectionQuiz.append(continuerBouton);
+
+    let selectedOption = document.querySelector('input[name="quiz"]:checked');
+    alert(selectedOption.id);
+    if(selectedOption){
+        let reponseUser = selectedOption.id;
+        //let questionActuelle = quizCourant.getQuestionsCourante();
+        let questionActuelle = questionCourante;
+        let bonneReponse = questionActuelle.getReponse(questionActuelle.indexBonneReponse);
+        alert(bonneReponse);
+
+        let resultSpan = document.createElement("span");
+        if (reponseUser === bonneReponse){
+            bonneReponse++;
+            resultSpan.innerText = "Bonne Réponse !";
+        } else{
+            resultSpan.innerText = "Mauvaise Réponse !";
+        }
+        sectionQuiz.append(resultSpan);
+        sectionQuiz.append(continuerBouton);
+
+        quizCourant.incrementPosQuestion();
+    } else{
+        alert("Veuillez sélectionner une réponse !");
+    }
+
+
 
 }
 
@@ -48,12 +76,14 @@ function nouvelleQuestion() {
     affPosQuestion.innerHTML = "Question " + (quizCourant.getIndexQuestionCourrante() + 1) + "/" + quizCourant.getNBMAXQUESTIONS();
 
     if (quizCourant.getNBMAXQUESTIONS() == quizCourant.getIndexQuestionCourrante()) {
-        sectionQuiz = finDeQuiz();
+        /*sectionQuiz = finDeQuiz();*/
+        sectionQuiz.innerHTML = "";
+        sectionQuiz.append(finDeQuiz());
     } else {
 
         let listeQuestions = document.createElement("div");
         listeQuestions.id = "questionCourante";
-        let questionCourante = quizCourant.getQuestionsCourante();
+        questionCourante = quizCourant.getQuestionsCourante();
 
         listeQuestions.innerText = questionCourante.enonce;
 
@@ -70,12 +100,13 @@ function nouvelleQuestion() {
             paragraphe.append(label);
             listeQuestions.append(paragraphe);
         }
-        quizCourant.incrementPosQuestion();
+
         sectionQuiz.innerHTML = "";
         sectionQuiz.append(affPosQuestion);
         sectionQuiz.append(listeQuestions);
         sectionQuiz.append(getNbBonnesReponses());
-
+        sectionQuiz.append(verifierBouton);
+        //quizCourant.incrementPosQuestion();
     }
 }
 
@@ -84,6 +115,8 @@ function boutonAbandonner() {
 }
 
 function boutonRecommencer() {
+    nbBonnesReponses = 0;
+    sectionQuiz.innerHTML = "";
     boutonDemarrer();
 }
 
@@ -92,6 +125,8 @@ function finDeQuiz() {
     continuerBouton.remove();
     continuerBouton.removeEventListener('click', nouvelleQuestion);
     contenant.innerText = "Fin du quiz!!!";
+
+    recommencerBouton.addEventListener('click', boutonRecommencer);
     contenant.append(recommencerBouton);
 
     return contenant;

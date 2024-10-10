@@ -12,11 +12,12 @@ const recommencerBouton = utility.creerButton("Recommencer", boutonRecommencer);
 let affPosQuestion = document.createElement("p");
 let msgDepart = document.createElement("p");
 let nbBonnesReponses = 0;
+let affichage = document;
 
 let questionCourante;
 
 
-
+//TODO Rajouter le bouton abandonner
 //TODO probleme de label qui a pas de "for"
 
 function getNbBonnesReponses() {
@@ -24,7 +25,7 @@ function getNbBonnesReponses() {
 }
 
 function boutonDemarrer() {
-   quizCourant = new Quiz(tabQuestions);
+    quizCourant = new Quiz(tabQuestions);
 
     msgDepart.innerHTML = "";
 
@@ -34,48 +35,44 @@ function boutonDemarrer() {
 
     nouvelleQuestion();
 
-    zoneDeDonnees.append(continuerBouton);
-    //TODO rajouter les boutons continuer / abandonner / vérifier notre reponse
 
 }
 
-//TODO faire la verification des reponses
+//TODO faire en sorte que la bonne reponse soit en vert et la mauvaise en rouge
 function boutonVerification() {
-    verifierBouton.removeEventListener('click', boutonDemarrer);
-    verifierBouton.remove();
-
     let selectedOption = document.querySelector('input[name="quiz"]:checked');
-    alert(selectedOption.id);
-    if(selectedOption){
-        let reponseUser = selectedOption.id;
-        //let questionActuelle = quizCourant.getQuestionsCourante();
-        let questionActuelle = questionCourante;
-        let bonneReponse = questionActuelle.getReponse(questionActuelle.indexBonneReponse);
-        alert(bonneReponse);
 
+    if (selectedOption) {
+        verifierBouton.remove();
+        affichage.append(continuerBouton);
+
+        let reponseUser = selectedOption.id;
+        let bonneReponse = questionCourante.getBonneReponse();
         let resultSpan = document.createElement("span");
-        if (reponseUser === bonneReponse){
-            bonneReponse++;
+
+        if (reponseUser === bonneReponse) {
+            selectedOption.style.color = "Green";
             resultSpan.innerText = "Bonne Réponse !";
-        } else{
+            nbBonnesReponses++;
+        } else {
+            selectedOption.style.color = "Red";
+
             resultSpan.innerText = "Mauvaise Réponse !";
         }
         sectionQuiz.append(resultSpan);
         sectionQuiz.append(continuerBouton);
 
         quizCourant.incrementPosQuestion();
-    } else{
+    } else {
         alert("Veuillez sélectionner une réponse !");
     }
-
-
 
 }
 
 function nouvelleQuestion() {
     affPosQuestion.innerHTML = "Question " + (quizCourant.getIndexQuestionCourrante() + 1) + "/" + quizCourant.getNBMAXQUESTIONS();
 
-    if (quizCourant.getNBMAXQUESTIONS() == quizCourant.getIndexQuestionCourrante()) {
+    if (quizCourant.getNBMAXQUESTIONS() === quizCourant.getIndexQuestionCourrante()) {
         /*sectionQuiz = finDeQuiz();*/
         sectionQuiz.innerHTML = "";
         sectionQuiz.append(finDeQuiz());
@@ -106,7 +103,6 @@ function nouvelleQuestion() {
         sectionQuiz.append(listeQuestions);
         sectionQuiz.append(getNbBonnesReponses());
         sectionQuiz.append(verifierBouton);
-        //quizCourant.incrementPosQuestion();
     }
 }
 
@@ -124,7 +120,7 @@ function finDeQuiz() {
     let contenant = document.createElement("div");
     continuerBouton.remove();
     continuerBouton.removeEventListener('click', nouvelleQuestion);
-    contenant.innerText = "Fin du quiz!!!";
+    contenant.innerText = "Fin du quiz!!! Votre score : " + nbBonnesReponses + "/" + quizCourant.getIndexQuestionCourrante();
 
     recommencerBouton.addEventListener('click', boutonRecommencer);
     contenant.append(recommencerBouton);
@@ -138,7 +134,7 @@ function remplirTableauQuestions() {
 
     for (let i = 1; i < tabAssQuestions.length; i++) {
         let j = tabAssQuestions[i];
-        let question = new Question(j.enonce, j.listeReponses, j.indexBonneReponse);
+        let question = new Question(j.enonce, j.listeReponses, j.bonneReponse);
 
         tableauQuestions.push(question);
     }
@@ -147,15 +143,16 @@ function remplirTableauQuestions() {
 
 //TODO toute mettre dans le fieldset
 function main() {
-    zoneDeDonnees.append(document.createElement("fieldset"));
-    sectionQuiz = document.querySelector("#zoneDeDonnees > fieldset");
+    affichage = document.createElement("div");
+    zoneDeDonnees.append(affichage);
+    sectionQuiz = document.createElement("fieldset");
+    affichage.append(sectionQuiz);
 
     msgDepart.innerText = "Bonjour et bienvenue au quiz!!! veuillez cliquer sur Commencer pour commencer le quiz🙂🙂🙂";
     affPosQuestion.id = "positionQuestion";
 
     sectionQuiz.append(msgDepart);
     sectionQuiz.append(departBouton);
-
 }
 
 main();

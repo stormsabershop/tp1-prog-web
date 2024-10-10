@@ -21,6 +21,7 @@ button {
     text-align: center;
     transition: transform 150ms, box-shadow 150ms;
     font-family: "Comic Sans MS";
+    margin: 0px 10px 0px 10px;
 }
 
 button:hover {

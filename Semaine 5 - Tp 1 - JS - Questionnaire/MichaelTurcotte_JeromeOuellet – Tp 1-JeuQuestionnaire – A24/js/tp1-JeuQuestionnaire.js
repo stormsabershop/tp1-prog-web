@@ -17,7 +17,6 @@ let affichage = document;
 let questionCourante;
 
 
-//TODO Rajouter le bouton abandonner
 //TODO probleme de label qui a pas de "for"
 
 function getNbBonnesReponses() {
@@ -25,10 +24,9 @@ function getNbBonnesReponses() {
 }
 
 function boutonDemarrer() {
+
     quizCourant = new Quiz(tabQuestions);
-
     msgDepart.innerHTML = "";
-
 
     departBouton.removeEventListener('click', boutonDemarrer);
     departBouton.remove();
@@ -38,9 +36,10 @@ function boutonDemarrer() {
 
 }
 
-//TODO faire en sorte que la bonne reponse soit en vert et la mauvaise en rouge
 function boutonVerification() {
     let selectedOption = document.querySelector('input[name="quiz"]:checked');
+    let selectedOptionLabel = selectedOption.parentNode.querySelector("label");
+
 
     if (selectedOption) {
         verifierBouton.remove();
@@ -51,13 +50,18 @@ function boutonVerification() {
         let resultSpan = document.createElement("span");
 
         if (reponseUser === bonneReponse) {
-            selectedOption.style.color = "Green";
-            resultSpan.innerText = "Bonne Réponse !";
+            selectedOptionLabel.classList.add("bonneReponse");
             nbBonnesReponses++;
         } else {
             selectedOption.style.color = "Red";
+            selectedOptionLabel.classList.add("mauvaiseReponse");
 
-            resultSpan.innerText = "Mauvaise Réponse !";
+            for (const label in sectionQuiz.querySelectorAll("label")) {
+                if (label.innerText === questionCourante.getBonneReponse()) {
+                    label.classList.add("bonneReponse");
+                }
+            }
+
         }
         sectionQuiz.append(resultSpan);
         sectionQuiz.append(continuerBouton);
@@ -68,14 +72,13 @@ function boutonVerification() {
     }
 
 }
-
+//TODO Essayer de remettre un peu de stock dans Quiz.js
 function nouvelleQuestion() {
     affPosQuestion.innerHTML = "Question " + (quizCourant.getIndexQuestionCourrante() + 1) + "/" + quizCourant.getNBMAXQUESTIONS();
 
     if (quizCourant.getNBMAXQUESTIONS() === quizCourant.getIndexQuestionCourrante()) {
         /*sectionQuiz = finDeQuiz();*/
-        sectionQuiz.innerHTML = "";
-        sectionQuiz.append(finDeQuiz());
+        finDeQuiz();
     } else {
 
         let listeQuestions = document.createElement("div");
@@ -103,11 +106,12 @@ function nouvelleQuestion() {
         sectionQuiz.append(listeQuestions);
         sectionQuiz.append(getNbBonnesReponses());
         sectionQuiz.append(verifierBouton);
+        affichage.append(abandonnerBouton);
     }
 }
 
 function boutonAbandonner() {
-
+    finDeQuiz();
 }
 
 function boutonRecommencer() {
@@ -116,16 +120,15 @@ function boutonRecommencer() {
     boutonDemarrer();
 }
 
+//TODO Faire le truc d'echelons selon le pourcentage de reussite
 function finDeQuiz() {
-    let contenant = document.createElement("div");
-    continuerBouton.remove();
-    continuerBouton.removeEventListener('click', nouvelleQuestion);
-    contenant.innerText = "Fin du quiz!!! Votre score : " + nbBonnesReponses + "/" + quizCourant.getIndexQuestionCourrante();
+    sectionQuiz.innerHTML = "";
+    abandonnerBouton.remove();
+
+    sectionQuiz.innerText = getNbBonnesReponses();
 
     recommencerBouton.addEventListener('click', boutonRecommencer);
-    contenant.append(recommencerBouton);
-
-    return contenant;
+    sectionQuiz.append(recommencerBouton);
 }
 
 
@@ -141,10 +144,9 @@ function remplirTableauQuestions() {
     return tableauQuestions;
 }
 
-//TODO toute mettre dans le fieldset
 function main() {
     affichage = document.createElement("div");
-    zoneDeDonnees.append(affichage);
+    document.getElementById("zoneDeDonnees").append(affichage);
     sectionQuiz = document.createElement("fieldset");
     affichage.append(sectionQuiz);
 

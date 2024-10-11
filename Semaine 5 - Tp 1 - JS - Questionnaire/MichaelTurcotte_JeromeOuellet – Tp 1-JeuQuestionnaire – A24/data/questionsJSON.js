@@ -55,7 +55,7 @@ let tabAssQuestions = [
     {
         "enonce" : "Quel est le continent avec le plus de personnes dessus ?",
         "listeReponses" :["Afrique", "Europe", "Asie", "Amérique du Sud"],
-        "bonneReponse" : "Afrique"
+        "bonneReponse" : "Asie"
     },
     {
         "enonce" : "Quelle est la capitale du Japon ?",

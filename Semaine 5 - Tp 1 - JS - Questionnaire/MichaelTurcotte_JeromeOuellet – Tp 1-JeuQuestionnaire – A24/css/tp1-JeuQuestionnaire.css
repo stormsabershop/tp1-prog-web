@@ -1,6 +1,7 @@
 html, body {
     height: 100%;
     margin: 0;
+    font-family: "Comic Sans MS", serif;
 }
 
 body {
@@ -20,8 +21,8 @@ button {
     padding: 10px 25px;
     text-align: center;
     transition: transform 150ms, box-shadow 150ms;
-    font-family: "Comic Sans MS";
     margin: 0px 10px 0px 10px;
+    font-family: "Papyrus", sans-serif;
 }
 
 button:hover {
@@ -39,7 +40,6 @@ button:active {
     padding: 10px 25px;
     text-align: center;
     transition: transform 150ms, box-shadow 150ms;
-    font-family: "Comic Sans MS";
 }
 
 
@@ -50,7 +50,6 @@ button:active {
     border-radius: 10px;
     background-color: white;
 
-    font-family: "Comic Sans MS";
 }
 
 #positionQuestion {
@@ -59,4 +58,21 @@ button:active {
 
 fieldset {
     border: none;
+}
+
+.bonneReponse {
+    color: Green;
+}
+.bonneReponse:after {
+    content: "✔"
+}
+
+.mauvaiseReponse {
+    color: Red;
+    font-weight: bold;
+    text-decoration: line-through;
+}
+
+.mauvaiseReponse:after {
+    content: "❌"
 }

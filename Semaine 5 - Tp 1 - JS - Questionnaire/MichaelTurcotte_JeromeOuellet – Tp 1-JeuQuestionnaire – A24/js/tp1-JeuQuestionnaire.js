@@ -76,6 +76,7 @@ function boutonVerification() {
 function nouvelleQuestion() {
     if (!(quizCourant.getNBMAXQUESTIONS()  === quizCourant.getIndexQuestionCourrante())) {
 
+        legende.innerText = "Questionnaire";
         let derniereQuestion = false;
         affPosQuestion.innerHTML = "Question " + (quizCourant.getIndexQuestionCourrante() + 1) + "/" + quizCourant.getNBMAXQUESTIONS();
 
@@ -112,9 +113,12 @@ function nouvelleQuestion() {
             continuerBouton = utility.creerButton("C'est terminé, voir vos résultats", nouvelleQuestion);
         }
     } else {
+        legende.innerHTML = "resultat";
+        affichage.append(legende);
         finDeQuiz();
     }
-    legende.innerText = "Questionnaire";
+
+
 
 
 }
@@ -131,6 +135,7 @@ function boutonRecommencer() {
 
 //TODO Faire le truc d'echelons selon le pourcentage de reussite
 function finDeQuiz(abandon) {
+
     sectionQuiz.innerHTML = "";
     abandonnerBouton.remove();
     let noteSurCent =  Math.round(((nbBonnesReponses * 100) / quizCourant.getNBMAXQUESTIONS()) * 100) / 100

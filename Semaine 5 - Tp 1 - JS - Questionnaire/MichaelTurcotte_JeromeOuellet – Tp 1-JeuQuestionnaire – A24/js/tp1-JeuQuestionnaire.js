@@ -12,6 +12,7 @@ const recommencerBouton = utility.creerButton("Recommencer", boutonRecommencer);
 let infoQuestion = document.createElement("p");
 let msgDepart = document.createElement("p");
 let legende = document.createElement("legend");
+let strBonnesReponses = document.createElement("p");
 
 let nbBonnesReponses = 0;
 let affichage = document;
@@ -37,10 +38,11 @@ function boutonDemarrer() {
 
 function boutonVerification() {
     let selectedOption = document.querySelector('input[name="quiz"]:checked');
-    let selectedOptionLabel = selectedOption.parentNode.querySelector("label");
+
 
 
     if (selectedOption) {
+        let selectedOptionLabel = selectedOption.parentNode.querySelector("label");
         verifierBouton.remove();
         affichage.append(continuerBouton);
 
@@ -63,6 +65,7 @@ function boutonVerification() {
             })
 
         }
+        strBonnesReponses.innerText = getNbBonnesReponses()+"";
         sectionQuiz.append(resultSpan);
         sectionQuiz.append(continuerBouton);
 
@@ -99,11 +102,14 @@ function nouvelleQuestion() {
             paragraphe.append(label);
             listeQuestions.append(paragraphe);
         }
+        strBonnesReponses.innerText = getNbBonnesReponses()+"";
+
         sectionQuiz.innerHTML = "";
         sectionQuiz.append(infoQuestion);
         sectionQuiz.append(listeQuestions);
-        sectionQuiz.append(getNbBonnesReponses());
+        sectionQuiz.append(strBonnesReponses);
         sectionQuiz.append(verifierBouton);
+
         //TODO Modifier le texte du bouton continuer si c'est la derniere question
         //TODO Enlever le bouton d'abandon si c'est la derniere question
         if (!(quizCourant.getNBMAXQUESTIONS() === quizCourant.getIndexQuestionCourrante() + 1)) {

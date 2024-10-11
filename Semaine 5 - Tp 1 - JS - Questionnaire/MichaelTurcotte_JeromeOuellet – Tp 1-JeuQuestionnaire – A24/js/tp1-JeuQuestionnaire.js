@@ -9,7 +9,7 @@ const departBouton = utility.creerButton("Commencer", boutonDemarrer);
 const verifierBouton = utility.creerButton("Vérifier", boutonVerification);
 const abandonnerBouton = utility.creerButton("Abandonner", boutonAbandonner);
 const recommencerBouton = utility.creerButton("Recommencer", boutonRecommencer);
-let affPosQuestion = document.createElement("p");
+let infoQuestion = document.createElement("p");
 let msgDepart = document.createElement("p");
 let legende = document.createElement("legend");
 
@@ -75,15 +75,15 @@ function boutonVerification() {
 
 function nouvelleQuestion() {
     if (!(quizCourant.getNBMAXQUESTIONS()  === quizCourant.getIndexQuestionCourrante())) {
+        questionCourante = quizCourant.getQuestionsCourante();
 
         legende.innerText = "Questionnaire";
         let derniereQuestion = false;
-        affPosQuestion.innerHTML = "Question " + (quizCourant.getIndexQuestionCourrante() + 1) + "/" + quizCourant.getNBMAXQUESTIONS();
+        infoQuestion.innerHTML = "Question " + (quizCourant.getIndexQuestionCourrante() + 1) + "/" + quizCourant.getNBMAXQUESTIONS();
+        infoQuestion.innerHTML += " Pour " + questionCourante.getPoidsPoints() + " points ";
 
         let listeQuestions = document.createElement("div");
         listeQuestions.id = "questionCourante";
-        questionCourante = quizCourant.getQuestionsCourante();
-
         listeQuestions.innerText = questionCourante.enonce;
 
         for (let i = 0; i < questionCourante.listeReponses.length; i++) {
@@ -100,7 +100,7 @@ function nouvelleQuestion() {
             listeQuestions.append(paragraphe);
         }
         sectionQuiz.innerHTML = "";
-        sectionQuiz.append(affPosQuestion);
+        sectionQuiz.append(infoQuestion);
         sectionQuiz.append(listeQuestions);
         sectionQuiz.append(getNbBonnesReponses());
         sectionQuiz.append(verifierBouton);
@@ -118,9 +118,6 @@ function nouvelleQuestion() {
         finDeQuiz();
     }
 
-
-
-
 }
 
 function boutonAbandonner() {
@@ -135,7 +132,6 @@ function boutonRecommencer() {
 
 //TODO Faire le truc d'echelons selon le pourcentage de reussite
 function finDeQuiz(abandon) {
-
     sectionQuiz.innerHTML = "";
     abandonnerBouton.remove();
     let noteSurCent =  Math.round(((nbBonnesReponses * 100) / quizCourant.getNBMAXQUESTIONS()) * 100) / 100
@@ -156,10 +152,8 @@ function finDeQuiz(abandon) {
         sectionQuiz.innerText += ", C'est dommage d'avoir abandonné..."
     }
 
-
     recommencerBouton.addEventListener('click', boutonRecommencer);
     sectionQuiz.append(recommencerBouton);
-
 }
 
 
@@ -168,7 +162,7 @@ function remplirTableauQuestions() {
 
     for (let i = 1; i < tabAssQuestions.length; i++) {
         let j = tabAssQuestions[i];
-        let question = new Question(j.enonce, j.listeReponses, j.bonneReponse);
+        let question = new Question(j.enonce, j.listeReponses, j.bonneReponse, j.points);
 
         tableauQuestions.push(question);
     }
@@ -190,12 +184,10 @@ function main() {
     legende.id = "legende";
 
     msgDepart.innerText = "Bonjour et bienvenue au quiz!!! veuillez cliquer sur Commencer pour commencer le quiz🙂🙂🙂";
-    affPosQuestion.id = "positionQuestion";
-
+    infoQuestion.id = "positionQuestion";
 
     sectionQuiz.append(msgDepart);
     sectionQuiz.append(departBouton);
-
 }
 
 main();

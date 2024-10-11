@@ -1,10 +1,11 @@
 class Question {
     listeReponses = [];
 
-    constructor(_enonce, _listeReponses, _bonneReponse) {
+    constructor(_enonce, _listeReponses, _bonneReponse, _poidsPoints) {
         this.enonce = _enonce;
         this.listeReponses = _listeReponses;
         this.bonneReponse = _bonneReponse;
+        this.poidsPoints = _poidsPoints;
     }
 
     /**
@@ -23,5 +24,9 @@ class Question {
      */
     getBonneReponse() {
         return this.bonneReponse;
+    }
+
+    getPoidsPoints() {
+        return this.poidsPoints;
     }
 }

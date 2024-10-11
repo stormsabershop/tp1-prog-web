@@ -5,10 +5,13 @@ const NBMAXQUESTIONQUIZ = 5;
 class Quiz {
     listeQuestions = [];
     posListeQuestion = 0;
+    totalPoints = 0;
 
 
     constructor(tabAllQuestions) {
         this.remplirQuiz(tabAllQuestions);
+        this.melangerQuestions();
+        this.totalPoints = this.calculerTotalPoints();
     }
 
     remplirQuiz(tabAllQuestion) {
@@ -17,7 +20,7 @@ class Quiz {
         for (let i = 0; i < NBMAXQUESTIONQUIZ; i++) {
             let estValide = false;
 
-            while(!estValide) {
+            while (!estValide) {
                 id = parseInt(Math.random() * 15);
 
                 if (!tabIdQuestions.includes(id)) {
@@ -28,11 +31,8 @@ class Quiz {
 
                 }
             }
-
         }
-
     }
-
 
     getIndexQuestionCourrante() {
         return this.posListeQuestion;
@@ -50,4 +50,19 @@ class Quiz {
         this.posListeQuestion++;
     }
 
+    calculerTotalPoints() {
+        let total = 0;
+        for (let i = 0; i < this.listeQuestions.length; i++) {
+            total += this.listeQuestions[i].poidsPoints;
+        }
+        return total;
+    }
+
+    getTotalPoints() {
+        return this.totalPoints;
+    }
+
+    melangerQuestions() {
+
+    }
 }

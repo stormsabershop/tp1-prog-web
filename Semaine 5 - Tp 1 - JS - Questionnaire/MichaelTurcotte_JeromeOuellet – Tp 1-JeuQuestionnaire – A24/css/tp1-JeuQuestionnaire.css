@@ -22,7 +22,7 @@ button {
     text-align: center;
     transition: transform 150ms, box-shadow 150ms;
     margin: 0px 10px 0px 10px;
-    font-family: "Papyrus", sans-serif;
+    font-family: "Comic Sans MS", sans-serif;
 }
 
 button:hover {

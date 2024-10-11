@@ -1,6 +1,6 @@
 "use strict";
 
-const utility = new Utility(20);
+const utility = new Utility();
 const tabQuestions = remplirTableauQuestions();
 let sectionQuiz = document;
 let quizCourant;
@@ -24,7 +24,6 @@ function getNbBonnesReponses() {
 }
 
 function boutonDemarrer() {
-
     quizCourant = new Quiz(tabQuestions);
     msgDepart.innerHTML = "";
 
@@ -32,8 +31,6 @@ function boutonDemarrer() {
     departBouton.remove();
 
     nouvelleQuestion();
-
-
 }
 
 function boutonVerification() {
@@ -56,11 +53,12 @@ function boutonVerification() {
             selectedOption.style.color = "Red";
             selectedOptionLabel.classList.add("mauvaiseReponse");
 
-            for (const label in sectionQuiz.querySelectorAll("label")) {
+            const listLabels = sectionQuiz.querySelectorAll("label");
+            listLabels.forEach(label => {
                 if (label.innerText === questionCourante.getBonneReponse()) {
                     label.classList.add("bonneReponse");
                 }
-            }
+            })
 
         }
         sectionQuiz.append(resultSpan);
@@ -72,14 +70,12 @@ function boutonVerification() {
     }
 
 }
-//TODO Essayer de remettre un peu de stock dans Quiz.js
-function nouvelleQuestion() {
-    affPosQuestion.innerHTML = "Question " + (quizCourant.getIndexQuestionCourrante() + 1) + "/" + quizCourant.getNBMAXQUESTIONS();
 
-    if (quizCourant.getNBMAXQUESTIONS() === quizCourant.getIndexQuestionCourrante()) {
-        /*sectionQuiz = finDeQuiz();*/
-        finDeQuiz();
-    } else {
+function nouvelleQuestion() {
+    if (!(quizCourant.getNBMAXQUESTIONS()  === quizCourant.getIndexQuestionCourrante())) {
+
+        let derniereQuestion = false;
+        affPosQuestion.innerHTML = "Question " + (quizCourant.getIndexQuestionCourrante() + 1) + "/" + quizCourant.getNBMAXQUESTIONS();
 
         let listeQuestions = document.createElement("div");
         listeQuestions.id = "questionCourante";
@@ -100,18 +96,24 @@ function nouvelleQuestion() {
             paragraphe.append(label);
             listeQuestions.append(paragraphe);
         }
-
         sectionQuiz.innerHTML = "";
         sectionQuiz.append(affPosQuestion);
         sectionQuiz.append(listeQuestions);
         sectionQuiz.append(getNbBonnesReponses());
         sectionQuiz.append(verifierBouton);
-        affichage.append(abandonnerBouton);
+        //TODO Modifier le texte du bouton continuer si c'est la derniere question
+        //TODO Enlever le bouton d'abandon si c'est la derniere question
+        if (!(quizCourant.getNBMAXQUESTIONS() - 1 === quizCourant.getIndexQuestionCourrante() + 1)) {
+            affichage.append(abandonnerBouton);
+        }
+    } else {
+        finDeQuiz();
     }
+
 }
 
 function boutonAbandonner() {
-    finDeQuiz();
+    finDeQuiz(true);
 }
 
 function boutonRecommencer() {
@@ -121,11 +123,15 @@ function boutonRecommencer() {
 }
 
 //TODO Faire le truc d'echelons selon le pourcentage de reussite
-function finDeQuiz() {
+function finDeQuiz(abandon) {
     sectionQuiz.innerHTML = "";
     abandonnerBouton.remove();
 
     sectionQuiz.innerText = getNbBonnesReponses();
+
+    if (abandon) {
+        sectionQuiz.innerText += ", C'est dommage d'avoir abandonné..."
+    }
 
     recommencerBouton.addEventListener('click', boutonRecommencer);
     sectionQuiz.append(recommencerBouton);

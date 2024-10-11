@@ -1,7 +1,6 @@
 "use strict";
 class Utility {
     constructor(_cool) {
-        this.cool = _cool
     }
 
     /**

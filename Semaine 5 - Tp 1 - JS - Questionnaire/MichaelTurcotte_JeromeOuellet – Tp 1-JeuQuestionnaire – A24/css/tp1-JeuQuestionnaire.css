@@ -43,7 +43,7 @@ button:active {
 }
 
 
-#zoneDeDonnees {
+#affichage {
     margin: 20px 25% 20px 25%;
     padding: 20px 20px 20px 20px;
     border: 2px solid black;
@@ -75,4 +75,8 @@ fieldset {
 
 .mauvaiseReponse:after {
     content: "❌"
+}
+
+#legende{
+
 }

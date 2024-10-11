@@ -4,13 +4,15 @@ const utility = new Utility();
 const tabQuestions = remplirTableauQuestions();
 let sectionQuiz = document;
 let quizCourant;
-const continuerBouton = utility.creerButton("Continuer", nouvelleQuestion);
-const verifierBouton = utility.creerButton("Vérifier", boutonVerification);
+let continuerBouton = utility.creerButton("Continuer", nouvelleQuestion);
 const departBouton = utility.creerButton("Commencer", boutonDemarrer);
+const verifierBouton = utility.creerButton("Vérifier", boutonVerification);
 const abandonnerBouton = utility.creerButton("Abandonner", boutonAbandonner);
 const recommencerBouton = utility.creerButton("Recommencer", boutonRecommencer);
 let affPosQuestion = document.createElement("p");
 let msgDepart = document.createElement("p");
+let legende = document.createElement("legend");
+
 let nbBonnesReponses = 0;
 let affichage = document;
 
@@ -103,12 +105,17 @@ function nouvelleQuestion() {
         sectionQuiz.append(verifierBouton);
         //TODO Modifier le texte du bouton continuer si c'est la derniere question
         //TODO Enlever le bouton d'abandon si c'est la derniere question
-        if (!(quizCourant.getNBMAXQUESTIONS() - 1 === quizCourant.getIndexQuestionCourrante() + 1)) {
+        if (!(quizCourant.getNBMAXQUESTIONS() === quizCourant.getIndexQuestionCourrante() + 1)) {
             affichage.append(abandonnerBouton);
+        }else{
+            abandonnerBouton.remove();
+            continuerBouton = utility.creerButton("C'est terminé, voir vos résultats", nouvelleQuestion);
         }
     } else {
         finDeQuiz();
     }
+    legende.innerText = "Questionnaire";
+
 
 }
 
@@ -126,15 +133,28 @@ function boutonRecommencer() {
 function finDeQuiz(abandon) {
     sectionQuiz.innerHTML = "";
     abandonnerBouton.remove();
+    let noteSurCent =  Math.round(((nbBonnesReponses * 100) / quizCourant.getNBMAXQUESTIONS()) * 100) / 100
 
-    sectionQuiz.innerText = getNbBonnesReponses();
+    sectionQuiz.innerText = "Voici le nombre de " + getNbBonnesReponses() + " ce qui vous fait une note de " + noteSurCent + "%. ";
 
+    if (noteSurCent === 100){
+        sectionQuiz.innerText += "Excellent, vous avez eu la note parfaite"
+    }
+    else if(noteSurCent >= 80){
+        sectionQuiz.innerText += "C'est bien, vous avez une très bonne note"
+    } else if (noteSurCent >= 60){
+        sectionQuiz.innerText += "C'est bien, vous avez la note de passage, avec un peu d'effort vous allez être très bon!"
+    } else{
+        sectionQuiz.innerText += "Désolé vous n'avez pas eu la note de passage, faites un peu plus d'effort !"
+    }
     if (abandon) {
         sectionQuiz.innerText += ", C'est dommage d'avoir abandonné..."
     }
 
+
     recommencerBouton.addEventListener('click', boutonRecommencer);
     sectionQuiz.append(recommencerBouton);
+
 }
 
 
@@ -151,16 +171,26 @@ function remplirTableauQuestions() {
 }
 
 function main() {
-    affichage = document.createElement("div");
+
+    affichage = document.createElement("fieldset");
+    affichage.id = "affichage";
+
     document.getElementById("zoneDeDonnees").append(affichage);
+    affichage.append(legende);
     sectionQuiz = document.createElement("fieldset");
     affichage.append(sectionQuiz);
+
+
+    legende.innerText = "Intro";
+    legende.id = "legende";
 
     msgDepart.innerText = "Bonjour et bienvenue au quiz!!! veuillez cliquer sur Commencer pour commencer le quiz🙂🙂🙂";
     affPosQuestion.id = "positionQuestion";
 
+
     sectionQuiz.append(msgDepart);
     sectionQuiz.append(departBouton);
+
 }
 
 main();

@@ -25,7 +25,7 @@ let tabAssQuestions = [
     {
         "enonce" : "Quel est le pays où est-ce que le chocolat a été inventé",
         "listeReponses" :["Suisse", "Mexique", "Belgique", "France"],
-        "bonneReponse" : "Mexique"
+        "bonneReponse" : "Suisse"
     },
     {
         "enonce" : "Qui a peinturé la \"Mona Lisa\" ?",

@@ -1,6 +1,8 @@
 "use strict";
 class Utility {
     constructor(_cool) {
+        this._cool = _cool;
+        this._textLabel = "";
     }
 
     /**
@@ -11,9 +13,26 @@ class Utility {
      */
     creerButton(texte, functionAExec) {
         let button = document.createElement("button");
-        button.innerHTML = texte;
+        this._textLabel = texte;
+        button.innerHTML = this._textLabel;
         button.addEventListener('click', functionAExec);
 
         return button;
+    }
+
+    get cool() {
+        return this._cool;
+    }
+
+    set cool(value) {
+        this._cool = value;
+    }
+
+    get textLabel() {
+        return this._textLabel;
+    }
+
+    set textLabel(value) {
+        this._textLabel = value;
     }
 }

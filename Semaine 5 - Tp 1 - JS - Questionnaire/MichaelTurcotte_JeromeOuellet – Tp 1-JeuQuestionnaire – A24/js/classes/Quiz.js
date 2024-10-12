@@ -1,23 +1,24 @@
 "use strict";
 
-const NBMAXQUESTIONQUIZ = 5;
 
 class Quiz {
     listeQuestions = [];
     posListeQuestion = 0;
     totalPoints = 0;
+    score = 0;
+    nbBonnesReponses = 0;
 
 
-    constructor(tabAllQuestions) {
+    constructor(tabAllQuestions, _nbQuestions) {
         this.remplirQuiz(tabAllQuestions);
-        this.melangerQuestions();
         this.totalPoints = this.calculerTotalPoints();
+        this.nbQuestions = _nbQuestions;
     }
 
     remplirQuiz(tabAllQuestion) {
         let tabIdQuestions = [];
         let id = 0;
-        for (let i = 0; i < NBMAXQUESTIONQUIZ; i++) {
+        for (let i = 0; i < NBMAXQUESTIONSQUIZ; i++) {
             let estValide = false;
 
             while (!estValide) {
@@ -38,8 +39,8 @@ class Quiz {
         return this.posListeQuestion;
     }
 
-    getNBMAXQUESTIONS() {
-        return NBMAXQUESTIONQUIZ;
+    getNbQuestions() {
+        return this.nbQuestions;
     }
 
     getQuestionsCourante() {
@@ -62,7 +63,20 @@ class Quiz {
         return this.totalPoints;
     }
 
-    melangerQuestions() {
+    getScore() {
+        return this.score;
+    }
 
+    resetScore() {
+        this.score = 0;
+    }
+
+    addScore(_score) {
+        this.nbBonnesReponses++;
+        this.score += _score;
+    }
+
+    getNbBonnesReponses() {
+        return this.nbBonnesReponses;
     }
 }

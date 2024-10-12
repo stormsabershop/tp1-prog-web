@@ -2,32 +2,25 @@
 
 const utility = new Utility();
 const tabQuestions = remplirTableauQuestions();
+const NBMAXQUESTIONSQUIZ = 5;
 let sectionQuiz = document;
 let quizCourant;
-let continuerBouton = utility.creerButton("Continuer", nouvelleQuestion);
-const departBouton = utility.creerButton("Commencer", boutonDemarrer);
-const verifierBouton = utility.creerButton("Vérifier", boutonVerification);
-const abandonnerBouton = utility.creerButton("Abandonner", boutonAbandonner);
+let continuerBouton = utility.creerButton("Passer à la prochaine question", nouvelleQuestion);
+const departBouton = utility.creerButton("Jouer", boutonDemarrer);
+const verifierBouton = utility.creerButton("Vérifier réponse", boutonVerification);
+const abandonnerBouton = utility.creerButton("Abandonner le questionnaire", boutonAbandonner);
 const recommencerBouton = utility.creerButton("Recommencer", boutonRecommencer);
 let infoQuestion = document.createElement("p");
 let msgDepart = document.createElement("p");
 let legende = document.createElement("legend");
 let strBonnesReponses = document.createElement("p");
 
-let nbBonnesReponses = 0;
 let affichage = document;
 
 let questionCourante;
 
-
-//TODO probleme de label qui a pas de "for"
-
-function getNbBonnesReponses() {
-    return document.createElement("span").innerText = "Bonnes Réponses : " + nbBonnesReponses + "/" + quizCourant.getNBMAXQUESTIONS();
-}
-
 function boutonDemarrer() {
-    quizCourant = new Quiz(tabQuestions);
+    quizCourant = new Quiz(tabQuestions, NBMAXQUESTIONSQUIZ);
     msgDepart.innerHTML = "";
 
     departBouton.removeEventListener('click', boutonDemarrer);
@@ -38,7 +31,6 @@ function boutonDemarrer() {
 
 function boutonVerification() {
     let selectedOption = document.querySelector('input[name="quiz"]:checked');
-
 
 
     if (selectedOption) {
@@ -52,7 +44,7 @@ function boutonVerification() {
 
         if (reponseUser === bonneReponse) {
             selectedOptionLabel.classList.add("bonneReponse");
-            nbBonnesReponses++;
+            quizCourant.addScore(questionCourante.getPoidsPoints());
         } else {
             selectedOption.style.color = "Red";
             selectedOptionLabel.classList.add("mauvaiseReponse");
@@ -65,29 +57,30 @@ function boutonVerification() {
             })
 
         }
-        strBonnesReponses.innerText = getNbBonnesReponses()+"";
+        strBonnesReponses.innerText = "Bonnes réponses : " + quizCourant.getNbBonnesReponses() + "/" + quizCourant.getNbQuestions();
         sectionQuiz.append(resultSpan);
         sectionQuiz.append(continuerBouton);
 
         quizCourant.incrementPosQuestion();
     } else {
-        alert("Veuillez sélectionner une réponse !");
+        alert("Veuillez sélectionner une réponse ou bien abandonner le quiz!");
     }
 
 }
 
 function nouvelleQuestion() {
-    if (!(quizCourant.getNBMAXQUESTIONS()  === quizCourant.getIndexQuestionCourrante())) {
+    if (!(quizCourant.getNbQuestions() === quizCourant.getIndexQuestionCourrante())) {
         questionCourante = quizCourant.getQuestionsCourante();
 
         legende.innerText = "Questionnaire";
-        let derniereQuestion = false;
-        infoQuestion.innerHTML = "Question " + (quizCourant.getIndexQuestionCourrante() + 1) + "/" + quizCourant.getNBMAXQUESTIONS();
-        infoQuestion.innerHTML += " Pour " + questionCourante.getPoidsPoints() + " points ";
+        infoQuestion.innerHTML = "Question " + (quizCourant.getIndexQuestionCourrante() + 1) + "/" + quizCourant.getNbQuestions();
+        infoQuestion.innerHTML += " Pour " + utility.rajoutMotPlurielApresNb("point", questionCourante.getPoidsPoints());
 
         let listeQuestions = document.createElement("div");
         listeQuestions.id = "questionCourante";
         listeQuestions.innerText = questionCourante.enonce;
+//TODO Faire en sorte que les Radios soit greyed out quand on fait la verification
+//TODO Faire pour qu'on puisse cliquer sur le texte du Label pour selectionner une Radio
 
         for (let i = 0; i < questionCourante.listeReponses.length; i++) {
             let paragraphe = document.createElement('p');
@@ -102,7 +95,7 @@ function nouvelleQuestion() {
             paragraphe.append(label);
             listeQuestions.append(paragraphe);
         }
-        strBonnesReponses.innerText = getNbBonnesReponses()+"";
+        strBonnesReponses.innerText = "Bonnes réponses : " + quizCourant.getNbBonnesReponses() + "/" + quizCourant.getNbQuestions();
 
         sectionQuiz.innerHTML = "";
         sectionQuiz.append(infoQuestion);
@@ -110,15 +103,17 @@ function nouvelleQuestion() {
         sectionQuiz.append(strBonnesReponses);
         sectionQuiz.append(verifierBouton);
 
-        //TODO Modifier le texte du bouton continuer si c'est la derniere question
         //TODO Enlever le bouton d'abandon si c'est la derniere question
-        if (!(quizCourant.getNBMAXQUESTIONS() === quizCourant.getIndexQuestionCourrante() + 1)) {
+        //TODO Placer le bouton a coté de verifier reponse (c'est pck yer dans affichage fak yer en bas mais si yer dans sectionQuiz ca le met avant verifier pis ca gosse en tabarouette
+        if (!(quizCourant.getNbQuestions() === quizCourant.getIndexQuestionCourrante() + 1)) {
             affichage.append(abandonnerBouton);
-        }else{
+        } else {
+            continuerBouton.innerText = "C'est terminé, voir vos résultats"
             abandonnerBouton.remove();
-            continuerBouton = utility.creerButton("C'est terminé, voir vos résultats", nouvelleQuestion);
+
         }
     } else {
+
         legende.innerHTML = "resultat";
         affichage.append(legende);
         finDeQuiz();
@@ -131,27 +126,27 @@ function boutonAbandonner() {
 }
 
 function boutonRecommencer() {
-    nbBonnesReponses = 0;
+    recommencerBouton.remove()
+    quizCourant.resetScore();
     sectionQuiz.innerHTML = "";
     boutonDemarrer();
 }
 
-//TODO Faire le truc d'echelons selon le pourcentage de reussite
 function finDeQuiz(abandon) {
     sectionQuiz.innerHTML = "";
     abandonnerBouton.remove();
-    let noteSurCent =  Math.round(((nbBonnesReponses * 100) / quizCourant.getNBMAXQUESTIONS()) * 100) / 100
+    let noteSurCent = Math.round(quizCourant.getScore() / quizCourant.getTotalPoints() * 100);
 
-    sectionQuiz.innerText = "Voici le nombre de " + getNbBonnesReponses() + " ce qui vous fait une note de " + noteSurCent + "%. ";
+    sectionQuiz.innerText = "Vous avez eu " + utility.rajoutMotPlurielApresNb("point", quizCourant.getScore()) +
+        " sur " + quizCourant.getTotalPoints() + ", ce qui vous fait une note de " + noteSurCent + "%. ";
 
-    if (noteSurCent === 100){
+    if (noteSurCent === 100) {
         sectionQuiz.innerText += "Excellent, vous avez eu la note parfaite"
-    }
-    else if(noteSurCent >= 80){
+    } else if (noteSurCent >= 80) {
         sectionQuiz.innerText += "C'est bien, vous avez une très bonne note"
-    } else if (noteSurCent >= 60){
+    } else if (noteSurCent >= 60) {
         sectionQuiz.innerText += "C'est bien, vous avez la note de passage, avec un peu d'effort vous allez être très bon!"
-    } else{
+    } else {
         sectionQuiz.innerText += "Désolé vous n'avez pas eu la note de passage, faites un peu plus d'effort !"
     }
     if (abandon) {
@@ -159,7 +154,7 @@ function finDeQuiz(abandon) {
     }
 
     recommencerBouton.addEventListener('click', boutonRecommencer);
-    sectionQuiz.append(recommencerBouton);
+    affichage.append(recommencerBouton);
 }
 
 
@@ -189,7 +184,7 @@ function main() {
     legende.innerText = "Intro";
     legende.id = "legende";
 
-    msgDepart.innerText = "Bonjour et bienvenue au quiz!!! veuillez cliquer sur Commencer pour commencer le quiz🙂🙂🙂";
+    msgDepart.innerText = "Bonjour et bienvenue au quiz!!! veuillez cliquer sur Jouer pour commencer le quiz🙂🙂🙂";
     infoQuestion.id = "positionQuestion";
 
     sectionQuiz.append(msgDepart);

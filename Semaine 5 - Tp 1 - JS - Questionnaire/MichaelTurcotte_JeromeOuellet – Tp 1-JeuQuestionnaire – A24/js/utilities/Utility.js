@@ -20,19 +20,8 @@ class Utility {
         return button;
     }
 
-    get cool() {
-        return this._cool;
+    rajoutMotPlurielApresNb(string, nombre) {
+        return nombre == 1 || nombre == 0? nombre + " "+ string : nombre + " " + string + "s";
     }
 
-    set cool(value) {
-        this._cool = value;
-    }
-
-    get textLabel() {
-        return this._textLabel;
-    }
-
-    set textLabel(value) {
-        this._textLabel = value;
-    }
 }

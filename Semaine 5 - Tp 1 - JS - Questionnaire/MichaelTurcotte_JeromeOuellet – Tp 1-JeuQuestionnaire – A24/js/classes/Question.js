@@ -1,5 +1,6 @@
 class Question {
     listeReponses = [];
+    poidsPoints = 0;
 
     constructor(_enonce, _listeReponses, _bonneReponse, _poidsPoints) {
         this.enonce = _enonce;
@@ -26,6 +27,10 @@ class Question {
         return this.bonneReponse;
     }
 
+    /**
+     * Retourne le poids des points de la question
+     * @returns {number}
+     */
     getPoidsPoints() {
         return this.poidsPoints;
     }

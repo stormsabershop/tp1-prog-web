@@ -9,7 +9,7 @@ let continuerBouton = utility.creerButton("Passer à la prochaine question", nou
 const departBouton = utility.creerButton("Jouer", boutonDemarrer);
 const verifierBouton = utility.creerButton("Vérifier réponse", boutonVerification);
 const abandonnerBouton = utility.creerButton("Abandonner le questionnaire", boutonAbandonner);
-const recommencerBouton = utility.creerButton("Recommencer", boutonRecommencer);
+const recommencerBouton = utility.creerButton("Rejouer", boutonRecommencer);
 const terminerQuizBouton = utility.creerButton("C'est terminé, voir vos résultats", finDeQuiz);
 let infoQuestion = document.createElement("p");
 let msgDepart = document.createElement("p");
@@ -38,9 +38,11 @@ function boutonDemarrer() {
  */
 function boutonVerification() {
     let selectedOption = document.querySelector('input[name="quiz"]:checked');
-    document.querySelectorAll('input[type="radio"]').forEach(radio => {radio.disabled = true;}) //Désactive tous les radios
 
     if (selectedOption) {
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.disabled = true;
+        }) //Désactive tous les radios
 
         let selectedOptionLabel = selectedOption.parentNode;
         verifierBouton.remove();
@@ -84,42 +86,46 @@ function boutonVerification() {
  * Crée une nouvelle question
  */
 function nouvelleQuestion() {
-        questionCourante = quizCourant.getQuestionsCourante();
+    questionCourante = quizCourant.getQuestionsCourante();
 
-        legende.innerText = "Questionnaire";
-        infoQuestion.innerHTML = "Question " + (quizCourant.getIndexQuestionCourrante() + 1) + "/" + quizCourant.getNbQuestions();
-        infoQuestion.innerHTML += " pour " + utility.rajoutMotPlurielApresNb("point", questionCourante.getPoidsPoints());
+    legende.innerText = "Questionnaire";
+    infoQuestion.innerHTML = "Question " + (quizCourant.getIndexQuestionCourrante() + 1) + "/" + quizCourant.getNbQuestions();
+    infoQuestion.innerHTML += " pour " + utility.rajoutMotPlurielApresNb("point", questionCourante.getPoidsPoints());
 
-        let listeQuestions = document.createElement("div");
-        listeQuestions.id = "questionCourante";
-        listeQuestions.innerText = questionCourante.enonce;
+    let listeQuestions = document.createElement("div");
+    listeQuestions.id = "questionCourante";
+    listeQuestions.innerText = questionCourante.enonce;
 
-        for (let i = 0; i < questionCourante.listeReponses.length; i++) {
-            let label = document.createElement('label');
-            let reponseQuestion = questionCourante.getReponse(i);
+    for (let i = 0; i < questionCourante.listeReponses.length; i++) {
+        let label = document.createElement('label');
+        let reponseQuestion = questionCourante.getReponse(i);
 
-            let radio = document.createElement("input");
-            radio.type = "radio";
-            label.setAttribute('for', reponseQuestion);
-            radio.id = reponseQuestion;
-            radio.name = "quiz";
-            label.append(radio);
-            label.innerHTML += " " + reponseQuestion;
-            listeQuestions.append(label);
-        }
-        strBonnesReponses.innerText = "Bonnes réponses : " + quizCourant.getNbBonnesReponses() + "/" + quizCourant.getNbQuestions();
+        let radio = document.createElement("input");
+        radio.type = "radio";
+        label.setAttribute('for', reponseQuestion);
+        radio.id = reponseQuestion;
+        radio.name = "quiz";
+        label.append(radio);
+        label.innerHTML += " " + reponseQuestion;
+        listeQuestions.append(label);
+    }
+    strBonnesReponses.innerText = "Bonnes réponses : " + quizCourant.getNbBonnesReponses() + "/" + quizCourant.getNbQuestions();
 
-        sectionQuiz.innerHTML = "";
-        continuerBouton.remove();
-        sectionQuiz.append(infoQuestion);
-        sectionQuiz.append(listeQuestions);
-        sectionQuiz.append(strBonnesReponses);
-        affichage.append(verifierBouton);
-        affichage.append(abandonnerBouton);
+    sectionQuiz.innerHTML = "";
+    continuerBouton.remove();
+    sectionQuiz.append(infoQuestion);
+    sectionQuiz.append(listeQuestions);
+    sectionQuiz.append(strBonnesReponses);
+    affichage.append(verifierBouton);
+    affichage.append(abandonnerBouton);
 
 }
 
 function boutonAbandonner() {
+    verifierBouton.remove();
+    abandonnerBouton.remove();
+    continuerBouton.remove();
+
     finDeQuiz(true);
 }
 
@@ -135,24 +141,12 @@ function finDeQuiz(abandon) {
     legende.innerHTML = "Resultat";
     affichage.append(legende);
     terminerQuizBouton.remove();
-    let noteSurCent = (Math.round(quizCourant.getScore() / quizCourant.getTotalPoints() * 100) / 100).toFixed(2);
+    let noteSurCent = quizCourant.getScorePourcentage();
 
     sectionQuiz.innerText = "Vous avez eu " + utility.rajoutMotPlurielApresNb("point", quizCourant.getScore()) +
         " sur " + quizCourant.getTotalPoints() + ", ce qui vous fait une note de " + noteSurCent + "%. ";
 
-    if (noteSurCent === 100) {
-        sectionQuiz.innerText += " Excellent, vous avez eu la note parfaite"
-    } else if (noteSurCent >= 80) {
-        sectionQuiz.innerText += " C'est bien, vous avez une très bonne note"
-    } else if (noteSurCent >= 60) {
-        sectionQuiz.innerText += " C'est bien, vous avez la note de passage, avec un peu d'effort vous allez être très bon!"
-    } else {
-        sectionQuiz.innerText += " Désolé vous n'avez pas eu la note de passage, faites un peu plus d'effort !"
-    }
-    if (abandon === true) {
-        sectionQuiz.innerText += ", C'est dommage d'avoir abandonné..."
-    }
-
+    sectionQuiz.innerText += quizCourant.resultatsEchelons(abandon);
     affichage.append(recommencerBouton);
 }
 
@@ -160,7 +154,7 @@ function finDeQuiz(abandon) {
 function remplirTableauQuestions() {
     let tableauQuestions = [];
 
-    for (let i = 1; i < tabAssQuestions.length; i++) {
+    for (let i = 0; i < tabAssQuestions.length; i++) {
         let j = tabAssQuestions[i];
         let question = new Question(j.enonce, j.listeReponses, j.bonneReponse, j.points);
 
@@ -183,7 +177,8 @@ function main() {
     legende.innerText = "Intro";
     legende.id = "legende";
 
-    msgDepart.innerText = "Bonjour et bienvenue au quiz!!! veuillez cliquer sur Jouer pour commencer le quiz🙂🙂🙂";
+    msgDepart.innerText = "Bonjour et bienvenue au quiz!!! veuillez cliquer sur Jouer pour commencer le quiz🙂🙂🙂" +
+        " Vous allez devoir répondre à " + NBMAXQUESTIONSQUIZ + " questions qui vaudront tous pour un pointage différent. Vous aurez votre note finale à la fin du quiz";
     infoQuestion.id = "positionQuestion";
 
     sectionQuiz.append(msgDepart);

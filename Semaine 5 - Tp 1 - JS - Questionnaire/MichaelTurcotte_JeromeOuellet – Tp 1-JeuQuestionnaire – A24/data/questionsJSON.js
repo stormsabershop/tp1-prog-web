@@ -15,7 +15,7 @@ let tabAssQuestions = [
     },
     {
         "enonce": "Comment convertir une chaîne en nombre entier en JavaScript?",
-        "listeReponses": ["parseInt()", "Number()", "toString()", "* parseFloat()"],
+        "listeReponses": ["* parseInt()", "Number()", "toString()", "parseFloat()"],
         "bonneReponse": "* parseInt()",
         "points": 3
     },
@@ -78,7 +78,7 @@ let tabAssQuestions = [
         "enonce": "Comment pouvez-vous obtenir la longueur d'une chaîne en JavaScript?",
         "listeReponses": ["string.size", "string.count", "* string.length", "string.len"],
         "bonneReponse": "* string.length",
-        "points": 3
+        "points": 1
     },
     {
         "enonce": "Quelle méthode est utilisée pour joindre tous les éléments d'un tableau en une chaîne?",

@@ -10,6 +10,7 @@ const departBouton = utility.creerButton("Jouer", boutonDemarrer);
 const verifierBouton = utility.creerButton("Vérifier réponse", boutonVerification);
 const abandonnerBouton = utility.creerButton("Abandonner le questionnaire", boutonAbandonner);
 const recommencerBouton = utility.creerButton("Recommencer", boutonRecommencer);
+const terminerQuizBouton = utility.creerButton("C'est terminé, voir vos résultats", finDeQuiz);
 let infoQuestion = document.createElement("p");
 let msgDepart = document.createElement("p");
 let legende = document.createElement("legend");
@@ -19,6 +20,9 @@ let affichage = document;
 
 let questionCourante;
 
+/**
+ * Crée un nouveau quiz et démarre le programme
+ */
 function boutonDemarrer() {
     quizCourant = new Quiz(tabQuestions, NBMAXQUESTIONSQUIZ);
     msgDepart.innerHTML = "";
@@ -29,12 +33,16 @@ function boutonDemarrer() {
     nouvelleQuestion();
 }
 
+/**
+ * Vérifier la réponse sélectionnée (s'il y en a une de sélectionnée)
+ */
 function boutonVerification() {
     let selectedOption = document.querySelector('input[name="quiz"]:checked');
-
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {radio.disabled = true;}) //Désactive tous les radios
 
     if (selectedOption) {
-        let selectedOptionLabel = selectedOption.parentNode.querySelector("label");
+
+        let selectedOptionLabel = selectedOption.parentNode;
         verifierBouton.remove();
         affichage.append(continuerBouton);
 
@@ -55,69 +63,59 @@ function boutonVerification() {
                     label.classList.add("bonneReponse");
                 }
             })
-
         }
         strBonnesReponses.innerText = "Bonnes réponses : " + quizCourant.getNbBonnesReponses() + "/" + quizCourant.getNbQuestions();
         sectionQuiz.append(resultSpan);
-        sectionQuiz.append(continuerBouton);
+        affichage.insertBefore(continuerBouton, abandonnerBouton);
 
         quizCourant.incrementPosQuestion();
     } else {
         alert("Veuillez sélectionner une réponse ou bien abandonner le quiz!");
     }
 
+    if (quizCourant.doesQuizEstTermine()) {
+        continuerBouton.remove();
+        abandonnerBouton.remove();
+        affichage.append(terminerQuizBouton);
+    }
 }
 
+/**
+ * Crée une nouvelle question
+ */
 function nouvelleQuestion() {
-    if (!(quizCourant.getNbQuestions() === quizCourant.getIndexQuestionCourrante())) {
         questionCourante = quizCourant.getQuestionsCourante();
 
         legende.innerText = "Questionnaire";
         infoQuestion.innerHTML = "Question " + (quizCourant.getIndexQuestionCourrante() + 1) + "/" + quizCourant.getNbQuestions();
-        infoQuestion.innerHTML += " Pour " + utility.rajoutMotPlurielApresNb("point", questionCourante.getPoidsPoints());
+        infoQuestion.innerHTML += " pour " + utility.rajoutMotPlurielApresNb("point", questionCourante.getPoidsPoints());
 
         let listeQuestions = document.createElement("div");
         listeQuestions.id = "questionCourante";
         listeQuestions.innerText = questionCourante.enonce;
-//TODO Faire en sorte que les Radios soit greyed out quand on fait la verification
-//TODO Faire pour qu'on puisse cliquer sur le texte du Label pour selectionner une Radio
 
         for (let i = 0; i < questionCourante.listeReponses.length; i++) {
-            let paragraphe = document.createElement('p');
             let label = document.createElement('label');
+            let reponseQuestion = questionCourante.getReponse(i);
 
             let radio = document.createElement("input");
             radio.type = "radio";
-            label.innerText = questionCourante.getReponse(i)
-            radio.id = label.innerText;
+            label.setAttribute('for', reponseQuestion);
+            radio.id = reponseQuestion;
             radio.name = "quiz";
-            paragraphe.append(radio);
-            paragraphe.append(label);
-            listeQuestions.append(paragraphe);
+            label.append(radio);
+            label.innerHTML += " " + reponseQuestion;
+            listeQuestions.append(label);
         }
         strBonnesReponses.innerText = "Bonnes réponses : " + quizCourant.getNbBonnesReponses() + "/" + quizCourant.getNbQuestions();
 
         sectionQuiz.innerHTML = "";
+        continuerBouton.remove();
         sectionQuiz.append(infoQuestion);
         sectionQuiz.append(listeQuestions);
         sectionQuiz.append(strBonnesReponses);
-        sectionQuiz.append(verifierBouton);
-
-        //TODO Enlever le bouton d'abandon si c'est la derniere question
-        //TODO Placer le bouton a coté de verifier reponse (c'est pck yer dans affichage fak yer en bas mais si yer dans sectionQuiz ca le met avant verifier pis ca gosse en tabarouette
-        if (!(quizCourant.getNbQuestions() === quizCourant.getIndexQuestionCourrante() + 1)) {
-            affichage.append(abandonnerBouton);
-        } else {
-            continuerBouton.innerText = "C'est terminé, voir vos résultats"
-            abandonnerBouton.remove();
-
-        }
-    } else {
-
-        legende.innerHTML = "resultat";
-        affichage.append(legende);
-        finDeQuiz();
-    }
+        affichage.append(verifierBouton);
+        affichage.append(abandonnerBouton);
 
 }
 
@@ -134,26 +132,27 @@ function boutonRecommencer() {
 
 function finDeQuiz(abandon) {
     sectionQuiz.innerHTML = "";
-    abandonnerBouton.remove();
-    let noteSurCent = Math.round(quizCourant.getScore() / quizCourant.getTotalPoints() * 100);
+    legende.innerHTML = "Resultat";
+    affichage.append(legende);
+    terminerQuizBouton.remove();
+    let noteSurCent = (Math.round(quizCourant.getScore() / quizCourant.getTotalPoints() * 100) / 100).toFixed(2);
 
     sectionQuiz.innerText = "Vous avez eu " + utility.rajoutMotPlurielApresNb("point", quizCourant.getScore()) +
         " sur " + quizCourant.getTotalPoints() + ", ce qui vous fait une note de " + noteSurCent + "%. ";
 
     if (noteSurCent === 100) {
-        sectionQuiz.innerText += "Excellent, vous avez eu la note parfaite"
+        sectionQuiz.innerText += " Excellent, vous avez eu la note parfaite"
     } else if (noteSurCent >= 80) {
-        sectionQuiz.innerText += "C'est bien, vous avez une très bonne note"
+        sectionQuiz.innerText += " C'est bien, vous avez une très bonne note"
     } else if (noteSurCent >= 60) {
-        sectionQuiz.innerText += "C'est bien, vous avez la note de passage, avec un peu d'effort vous allez être très bon!"
+        sectionQuiz.innerText += " C'est bien, vous avez la note de passage, avec un peu d'effort vous allez être très bon!"
     } else {
-        sectionQuiz.innerText += "Désolé vous n'avez pas eu la note de passage, faites un peu plus d'effort !"
+        sectionQuiz.innerText += " Désolé vous n'avez pas eu la note de passage, faites un peu plus d'effort !"
     }
-    if (abandon) {
+    if (abandon === true) {
         sectionQuiz.innerText += ", C'est dommage d'avoir abandonné..."
     }
 
-    recommencerBouton.addEventListener('click', boutonRecommencer);
     affichage.append(recommencerBouton);
 }
 

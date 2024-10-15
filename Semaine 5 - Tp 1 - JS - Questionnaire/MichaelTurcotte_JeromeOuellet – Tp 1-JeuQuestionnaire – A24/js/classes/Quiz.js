@@ -1,6 +1,5 @@
 "use strict";
 
-
 class Quiz {
     listeQuestions = [];
     posListeQuestion = 0;
@@ -8,14 +7,14 @@ class Quiz {
     score = 0;
     nbBonnesReponses = 0;
 
-
     constructor(tabAllQuestions, _nbQuestions) {
-        this.remplirQuiz(tabAllQuestions);
-        this.totalPoints = this.calculerTotalPoints();
+        this.listeQuestions = this.remplirQuiz(tabAllQuestions);
         this.nbQuestions = _nbQuestions;
+        this.totalPoints = this.calculerTotalPoints();
     }
 
     remplirQuiz(tabAllQuestion) {
+        let listeQuestions = [];
         let tabIdQuestions = [];
         let id = 0;
         for (let i = 0; i < NBMAXQUESTIONSQUIZ; i++) {
@@ -28,11 +27,11 @@ class Quiz {
                     tabIdQuestions.push(id);
 
                     estValide = true;
-                    this.listeQuestions.push(tabAllQuestion[id]);
-
+                    listeQuestions.push(tabAllQuestion[id]);
                 }
             }
         }
+        return listeQuestions;
     }
 
     getIndexQuestionCourrante() {
@@ -50,7 +49,7 @@ class Quiz {
     incrementPosQuestion() {
         this.posListeQuestion++;
     }
-
+    //TODO Erreur quand on pese sur demarrer defois
     calculerTotalPoints() {
         let total = 0;
         for (let i = 0; i < this.listeQuestions.length; i++) {
@@ -61,6 +60,9 @@ class Quiz {
 
     getTotalPoints() {
         return this.totalPoints;
+    }
+    doesQuizEstTermine() {
+        return (this.nbQuestions === this.getIndexQuestionCourrante());
     }
 
     getScore() {

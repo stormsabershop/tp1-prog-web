@@ -2,16 +2,11 @@ html, body {
     height: 100%;
     margin: 0;
     font-family: "Comic Sans MS", serif;
-    background-image: url("https://img.freepik.com/photos-gratuite/vue-du-paysage-naturel-lac_23-2150763840.jpg");
+    background-image: url("https://wallpapers.com/images/hd/beautiful-nature-pictures-2c29nke7owomq7la.jpg");
     background-size: cover;
-}
-
-body {
     text-align: left;
-    /* background: rgb(255, 235, 205);
-     background-image: linear-gradient(180deg, rgb(255, 235, 205) 0%, rgb(255, 184, 78) 100%);*/
-}
 
+}
 
 button {
     background-color: mediumseagreen;
@@ -25,6 +20,8 @@ button {
     transition: transform 150ms, box-shadow 150ms;
     margin: 0px 10px 0px 10px;
     font-family: "Comic Sans MS", sans-serif;
+    cursor: pointer;
+
 }
 
 button:hover {
@@ -44,13 +41,11 @@ button:active {
     transition: transform 150ms, box-shadow 150ms;
 }
 
-
 #affichage {
     margin: 20px 25% 20px 25%;
     border: 2px solid black;
     border-radius: 10px;
     background-color: white;
-
 }
 
 #positionQuestion {
@@ -59,6 +54,13 @@ button:active {
 
 fieldset {
     border: none;
+}
+
+label {
+    cursor: pointer;
+    display: block;
+    margin-top: 10px;
+    vertical-align: top;
 }
 
 .bonneReponse {
@@ -76,4 +78,8 @@ fieldset {
 
 .mauvaiseReponse:after {
     content: "❌"
+}
+
+legend {
+
 }
